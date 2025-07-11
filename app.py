@@ -2,33 +2,25 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
 
-st.set_page_config(page_title="QuLab", layout="wide")
+st.set_page_config(page_title="QuLab - Risk Governance Lab 1", layout="wide")
 st.sidebar.image("https://www.quantuniversity.com/assets/img/logo5.jpg")
 st.sidebar.divider()
-st.title("QuLab")
+st.title("QuLab: Risk Governance Lab 1")
 st.divider()
 st.markdown("""
-In this lab, we present the **Risk Appetite & Governance Simulator**, an interactive Streamlit application designed for corporate governance professionals, risk practitioners, and finance students.
+Welcome to the **Risk Governance Lab 1**!
 
-**Purpose and Objectives:**
-The primary purpose of this tool is to demonstrate how predefined risk appetite boundaries influence a firm's ability to manage various risk exposures. It also illustrates how different governance and policy choices dynamically shape an organization's risk profile in real-time.
+This interactive simulator is designed for corporate governance professionals, risk practitioners, and finance students. It demonstrates how **risk appetite boundaries** influence a firm's ability to manage various risk exposures, and how different governance and policy choices dynamically shape an organization's risk profile in real-time.
 
-**Key Objectives:**
-*   Enable users to define and quantify risk appetite thresholds across financial, operational, and reputational dimensions.
-*   Allow users to simulate risk events and apply various risk management strategies (Accept, Mitigate, Transfer, Eliminate).
-*   Provide a compliance dashboard to visualize actual risk exposure against defined risk appetite boundaries.
-*   Display cumulative impact trends of losses and incidents over time under different governance setups.
-*   Facilitate aggregated policy analysis to compare the effectiveness of different risk management approaches across various risk categories.
+### Key Objectives:
+*   **Define and Quantify Risk Appetite:** Set thresholds across financial, operational, and reputational dimensions.
+*   **Simulate Risk Events:** Apply various risk management strategies (Accept, Mitigate, Transfer, Eliminate) to synthetic risk scenarios.
+*   **Visualize Compliance:** Observe actual risk exposure against defined risk appetite boundaries through a compliance dashboard.
+*   **Analyze Cumulative Trends:** Track the cumulative impact of losses and incidents over time under different governance setups.
+*   **Compare Effectiveness:** Facilitate aggregated policy analysis to compare the effectiveness of different risk management approaches across various risk categories.
 
-Through this simulator, users can explore:
-1.  **How to define a "risk universe"** by generating diverse synthetic risk events.
-2.  **The critical role of risk appetite** in setting boundaries for acceptable risk exposure.
-3.  **The real-time impact of risk management actions** on an organization's risk profile and compliance status.
-4.  **The importance of logging and aggregating simulation outcomes** for continuous governance improvement and strategic decision-making.
-
-Navigate through the pages using the sidebar to explore each step of the risk governance process.
+Navigate through the sections using the sidebar to explore different aspects of risk governance simulation.
 """)
 
 # Initialize session state variables if they don't exist
@@ -47,8 +39,13 @@ if 'simulation_log' not in st.session_state:
         'Residual Likelihood', 'Residual Financial Impact', 'Residual Reputational Impact', 'Residual Operational Impact',
         'Financial Compliance', 'Operational Compliance', 'Reputational Compliance'
     ])
+# This temporary variable holds the last simulation outcome before it's appended to the log
+if 'last_simulated_outcome' not in st.session_state:
+    st.session_state['last_simulated_outcome'] = None
 
-page = st.sidebar.selectbox(label="Navigation", options=["Data Generation & Risk Appetite", "Scenario Simulation & Logging", "Cumulative Analysis & Aggregation"])
+
+st.sidebar.divider()
+page = st.sidebar.selectbox(label="Navigation", options=["Data Generation & Risk Appetite", "Scenario Simulation & Logging", "Cumulative & Aggregated Insights"])
 
 if page == "Data Generation & Risk Appetite":
     from application_pages.page1 import run_page1
@@ -56,6 +53,6 @@ if page == "Data Generation & Risk Appetite":
 elif page == "Scenario Simulation & Logging":
     from application_pages.page2 import run_page2
     run_page2()
-elif page == "Cumulative Analysis & Aggregation":
+elif page == "Cumulative & Aggregated Insights":
     from application_pages.page3 import run_page3
     run_page3()
