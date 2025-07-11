@@ -1,54 +1,44 @@
 
 import streamlit as st
-import pandas as pd
-import numpy as np
-import plotly.express as px
 
 st.set_page_config(page_title="QuLab", layout="wide")
+
 st.sidebar.image("https://www.quantuniversity.com/assets/img/logo5.jpg")
 st.sidebar.divider()
-st.title("QuLab")
+
+st.title("QuLab: Risk Appetite & Governance Simulator")
 st.divider()
+
 st.markdown("""
-In this lab, we explore the dynamic interaction between a firm's risk appetite and its risk management strategies. This interactive simulator is designed for corporate governance professionals, risk practitioners, and finance students to understand how defined risk appetite boundaries influence a firm's ability to manage various risk exposures.
+In this lab, we explore the critical interplay between an organization's **risk appetite** and its **risk management strategies**. This interactive simulator is designed for corporate governance professionals, risk practitioners, and finance students to understand how predefined risk boundaries influence the firm's response to various risk exposures (financial, operational, reputational) and how different governance choices dynamically shape its overall risk profile.
 
-The application demonstrates how different governance and policy choices dynamically shape an organization's risk profile in real-time. You will be able to:
-*   Define and quantify risk appetite thresholds across financial, operational, and reputational dimensions.
-*   Simulate risk events and apply various risk management strategies (Accept, Mitigate, Transfer, Eliminate).
-*   Visualize actual risk exposure against defined risk appetite boundaries using a compliance dashboard.
-*   Display cumulative impact trends of losses and incidents over time under different governance setups.
-*   Perform aggregated policy analysis to compare the effectiveness of different risk management approaches across various risk categories.
+**Key Concepts:**
+*   **Risk Appetite:** The amount and type of risk that an organization is willing to take in order to meet its strategic objectives.
+*   **Risk Management Actions:** Strategies such as Accept, Mitigate, Transfer, or Eliminate, used to respond to identified risks.
+*   **Compliance:** Verifying that residual risk impacts remain within the defined risk appetite thresholds.
 
-**Navigation:** Use the sidebar on the left to navigate between different steps of the simulation. Each page guides you through a specific aspect of risk governance.
+Through a series of steps, you will:
+1.  **Generate Synthetic Risk Data:** Create a diverse set of hypothetical risk scenarios.
+2.  **Define Risk Appetite:** Set the firm's maximum acceptable thresholds for financial loss, operational incidents, and reputational impact.
+3.  **Simulate Scenario Outcomes:** Apply different risk management actions to individual scenarios and observe their effects on initial versus residual impacts.
+4.  **Log Simulations:** Maintain a historical record of all simulated events and their outcomes.
+5.  **Calculate Cumulative Impact:** Analyze trends of total financial losses and compliant incidents over time.
+6.  **Aggregate Results:** Identify high-risk areas and compare the effectiveness of different risk management actions across categories.
+
+This tool aims to provide a practical understanding of how robust risk governance frameworks lead to more informed decision-making and a resilient organization.
 """)
 
-# Initialize session state variables if they don't exist
-if 'synthetic_data' not in st.session_state:
-    st.session_state['synthetic_data'] = pd.DataFrame()
-if 'risk_appetite_thresholds' not in st.session_state:
-    st.session_state['risk_appetite_thresholds'] = {
-        'Max Acceptable Financial Loss per Incident': 50000.0,
-        'Max Acceptable Incidents per Period': 10,
-        'Max Acceptable Reputational Impact Score': 5.0
-    }
-if 'simulation_log' not in st.session_state:
-    st.session_state['simulation_log'] = pd.DataFrame(columns=[
-        'Scenario ID', 'Risk Category', 'Chosen Action',
-        'Initial Likelihood', 'Initial Financial Impact', 'Initial Reputational Impact', 'Initial Operational Impact',
-        'Residual Likelihood', 'Residual Financial Impact', 'Residual Reputational Impact', 'Residual Operational Impact',
-        'Financial Compliance', 'Operational Compliance', 'Reputational Compliance'
-    ])
-
 # Your code starts here
-page = st.sidebar.selectbox(label="Navigation", options=["Step 1: Data Generation", "Step 2: Risk Appetite", "Step 3-6: Simulation & Analysis"])
+st.sidebar.markdown("### Navigation")
+page = st.sidebar.selectbox(label="Go to", options=["Data Generation", "Risk Appetite & Simulation", "Cumulative & Aggregated Insights"])
 
-if page == "Step 1: Data Generation":
+if page == "Data Generation":
     from application_pages.page1_data_generation import run_page1
     run_page1()
-elif page == "Step 2: Risk Appetite":
-    from application_pages.page2_risk_appetite import run_page2
+elif page == "Risk Appetite & Simulation":
+    from application_pages.page2_risk_appetite_simulation import run_page2
     run_page2()
-elif page == "Step 3-6: Simulation & Analysis":
-    from application_pages.page3_6_simulation_analysis import run_page3_6
-    run_page3_6()
+elif page == "Cumulative & Aggregated Insights":
+    from application_pages.page3_cumulative_aggregated import run_page3
+    run_page3()
 # Your code ends
