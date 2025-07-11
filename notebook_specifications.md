@@ -47,7 +47,7 @@ Markdown Explanation:
 In risk management, **Risk** is typically quantified as the product of the likelihood of an adverse event occurring and the impact (or severity) of that event.
 
 Display Equation:
-$$ \text{Risk} = \text{Likelihood} \times \text{Impact} $$
+$ \text{Risk} = \text{Likelihood} \times \text{Impact} $
 
 *   **Likelihood** ($L$): The probability or frequency of a risk event occurring. It can be expressed as a probability (e.g., $0.05$ for a 5% chance) or a frequency (e.g., 2 times per year).
 *   **Impact** ($I$): The consequence of the risk event, typically expressed in monetary terms (e.g., financial loss) or qualitative measures (e.g., reputational damage, operational disruption).
