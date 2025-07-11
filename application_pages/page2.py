@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+# Step 3: Simulating Scenario Outcomes Based on Risk Management Actions
 def simulate_scenario_outcome(scenario_data, action, action_params, risk_appetite_thresholds):
     """
     Simulates the outcome of a risk management scenario.
@@ -69,6 +70,7 @@ def simulate_scenario_outcome(scenario_data, action, action_params, risk_appetit
     }
     return result
 
+# Step 4: Logging Simulation Outcomes for Audit and Governance
 def update_simulation_log_st(simulation_log_df, scenario_outcome):
     """
     Appends scenario outcome to a historical pandas.DataFrame log.
@@ -102,11 +104,11 @@ def update_simulation_log_st(simulation_log_df, scenario_outcome):
 
 
 def run_page2():
-    st.header("Scenario Simulation & Log")
+    st.header("Scenario Simulation & Simulation Log")
 
+    # Step 3: Simulating Scenario Outcomes Based on Risk Management Actions
     st.markdown("""
     ### Step 3: Simulating Scenario Outcomes Based on Risk Management Actions
-
     **Business Value:**
     This step models the impact of various risk management actions on the likelihood and impact of risk events, allowing users to observe the effect of their decisions. Compliance is evaluated by verifying that the residual impacts are within the predefined risk appetite.
 
@@ -122,82 +124,69 @@ def run_page2():
         *   Residual Impact = 0
     """)
 
-    st.subheader("Simulate Scenario Outcome")
+    st.sidebar.header("Step 3: Simulate Scenario Outcome")
 
     if not st.session_state['synthetic_data'].empty:
         scenario_ids = st.session_state['synthetic_data']['Scenario ID'].tolist()
-        selected_scenario_id = st.selectbox("Select Scenario to Simulate", scenario_ids, help="Choose a scenario to apply a risk management action.")
+        selected_scenario_id = st.sidebar.selectbox("Select Scenario to Simulate", scenario_ids, help="Choose a scenario to apply a risk management action.")
         selected_scenario = st.session_state['synthetic_data'][
             st.session_state['synthetic_data']['Scenario ID'] == selected_scenario_id
         ].iloc[0]
 
-        st.info(f"Selected Scenario Details (ID: {selected_scenario_id}):")
-        st.write(f"- **Risk Category:** {selected_scenario['Risk Category']}")
-        st.write(f"- **Initial Financial Impact:** ${selected_scenario['Initial Impact (Financial)']:,}")
-        st.write(f"- **Initial Reputational Impact:** {selected_scenario['Initial Impact (Reputational)']:.1f}")
-        st.write(f"- **Initial Operational Impact:** {selected_scenario['Initial Impact (Operational)']:.1f}")
-
         action_options = ['Accept', 'Mitigate', 'Transfer', 'Eliminate']
-        selected_action = st.selectbox("Choose Risk Management Action", action_options, help="Select a strategy to manage the chosen risk scenario.")
+        selected_action = st.sidebar.selectbox("Choose Risk Management Action", action_options, help="Select a strategy to manage the chosen risk scenario.")
 
         action_params = {}
         if selected_action == 'Mitigate':
-            action_params['Mitigation Factor (Impact Reduction %)'] = st.slider(
+            action_params['Mitigation Factor (Impact Reduction %)'] = st.sidebar.slider(
                 "Impact Reduction (%)", 0.0, 1.0, 0.5, 0.05,
                 help="Proportion by which impact (financial, reputational, operational) is reduced."
             )
-            action_params['Mitigation Factor (Likelihood Reduction %)'] = st.slider(
+            action_params['Mitigation Factor (Likelihood Reduction %)'] = st.sidebar.slider(
                 "Likelihood Reduction (%)", 0.0, 1.0, 0.5, 0.05,
                 help="Proportion by which likelihood is reduced."
             )
         elif selected_action == 'Transfer':
-            action_params['Insurance Deductible ($)'] = st.number_input(
+            action_params['Insurance Deductible ($)'] = st.sidebar.number_input(
                 "Insurance Deductible ($)", 0.0, 50000.0, 0.0, 100.0,
                 help="Amount of financial loss not covered by insurance."
             )
-            action_params['Insurance Coverage Ratio (%)'] = st.slider(
+            action_params['Insurance Coverage Ratio (%)'] = st.sidebar.slider(
                 "Insurance Coverage Ratio (%)", 0.0, 1.0, 0.8, 0.05,
                 help="Proportion of financial loss covered by insurance."
             )
 
-        if st.button("Run Simulation"):
-            with st.spinner("Running simulation..."):
-                outcome = simulate_scenario_outcome(
-                    selected_scenario, selected_action, action_params, st.session_state['risk_appetite_thresholds']
-                )
-                st.session_state['last_simulated_outcome'] = outcome
-                st.success(f"Simulation run for Scenario ID: {selected_scenario_id} with action: {selected_action}")
-            
-            st.markdown("""
-            **Simulation Outcome:**
-            The table below shows the results of the last simulation, including the initial impacts, the chosen action, the residual impacts after applying the action, and the compliance status against the defined risk appetite thresholds.
-            """)
-            st.dataframe(pd.DataFrame([outcome]).set_index('Scenario ID'), use_container_width=True)
+        if st.sidebar.button("Run Simulation"):
+            outcome = simulate_scenario_outcome(
+                selected_scenario, selected_action, action_params, st.session_state['risk_appetite_thresholds']
+            )
+            st.session_state['last_simulated_outcome'] = outcome
+            st.success(f"Simulation run for Scenario ID: {selected_scenario_id} with action: {selected_action}")
+            st.dataframe(pd.DataFrame([outcome]).set_index('Scenario ID')) # Display the single outcome
 
     else:
-        st.warning("Please generate synthetic data on the 'Data Generation & Risk Appetite' page first to simulate scenarios.")
+        st.sidebar.warning("Please generate synthetic data first to simulate scenarios.")
         st.info("Simulated Scenario Outcome will appear here after running a simulation.")
 
-    st.markdown("""
-    ---
-    ### Step 4: Logging Simulation Outcomes for Audit and Governance
+    st.markdown("---")
 
+    # Step 4: Logging Simulation Outcomes for Audit and Governance
+    st.markdown("""
+    ### Step 4: Logging Simulation Outcomes for Audit and Governance
     **Business Value:**
     Maintaining a historical log of simulated risk scenarios and their policy outcomes is vital for compliance, continuous governance improvement, and enabling trend/portfolio analysis. This aligns with good governance practices: tracking and reviewing risk-response effectiveness over time.
     """)
 
-    st.subheader("Simulation Log")
-    # This block processes the 'last_simulated_outcome' into the main 'simulation_log'
+    # This part logs the last simulated outcome if available
+    # It must be outside the `if st.sidebar.button` block to be re-executed on every rerun if the outcome is set
     if 'last_simulated_outcome' in st.session_state and st.session_state['last_simulated_outcome'] is not None:
-        try:
-            st.session_state['simulation_log'] = update_simulation_log_st(
-                st.session_state['simulation_log'], st.session_state.pop('last_simulated_outcome')
-            )
-        except (TypeError, KeyError) as e:
-            st.error(f"Error updating simulation log: {e}")
-            st.session_state['last_simulated_outcome'] = None # Reset to prevent continuous errors
+        st.session_state['simulation_log'] = update_simulation_log_st(
+            st.session_state['simulation_log'], st.session_state.pop('last_simulated_outcome')
+        )
     
+    st.subheader("Simulation Log")
     if not st.session_state['simulation_log'].empty:
-        st.dataframe(st.session_state['simulation_log'], use_container_width=True)
+        st.dataframe(st.session_state['simulation_log'])
     else:
-        st.info("Run simulations to see the log here. Each successful simulation will be added.")
+        st.info("Run simulations to see the log here.")
+
