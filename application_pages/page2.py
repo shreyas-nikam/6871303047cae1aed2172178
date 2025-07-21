@@ -114,6 +114,14 @@ def update_simulation_log_st(simulation_log_df, scenario_outcome):
     # Ensure consistent order of columns before concatenation
     new_row_df = new_row_df[expected_cols]
 
+    # Handle empty DataFrame case to avoid FutureWarning
+    if simulation_log_df.empty:
+        return new_row_df.copy()
+    
+    # Filter out any completely empty/NA rows to avoid deprecation warning
+    if new_row_df.dropna(how='all').empty:
+        return simulation_log_df.copy()
+    
     return pd.concat([simulation_log_df, new_row_df], ignore_index=True)
 
 

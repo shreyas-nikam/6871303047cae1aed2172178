@@ -1,0 +1,389 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Building a Risk Governance Lab with Streamlit</title>
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../elements/codelab.html">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <style is="custom-style">
+    body {
+      font-family: "Roboto",sans-serif;
+      background: var(--google-codelab-background, --paper-grey-300);
+    }
+  </style>
+  
+</head>
+<body unresolved class="fullbleed">
+
+  <google-codelab title="Building a Risk Governance Lab with Streamlit"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="1. Understanding the Risk Governance Lab Application" duration="300">
+          This codelab provides a comprehensive guide to a Streamlit application designed as a <strong>Risk Governance Lab</strong>. The application simulates various aspects of risk management within a firm, focusing on how different risk management actions impact a firm’s adherence to its predefined risk appetite. For developers, understanding this application provides insights into:  <ul>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+</ul>
+   Why is this important? In finance and business, effective risk governance is paramount. This application provides a sandbox environment to: <ul>
+<li>b</li>
+<li>b</li>
+<li>b</li>
+<li>b</li>
+</ul>
+   <h3>Application Architecture Overview</h3>
+  The application is structured into a main <code>app.py</code> file and three sub-modules within an <code>application_pages</code> directory, each handling a specific part of the risk governance process:  <ul>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+</ul>
+   Key Concept: Streamlit&#39;s `st.session_state` Throughout this application, <code>st.session_state</code> is heavily utilized. It&#39;s a dictionary-like object that allows you to persist information across reruns of your Streamlit app, and importantly, across different pages when using a multi-page setup. This is crucial for passing data (like generated scenarios or risk appetite thresholds) from one page to another.   Here’s a high-level conceptual flow:  <pre><code>User launches app.py
+       |
+       V
+  Sidebar Navigation
+       |
+++--+
+|      |           |
+V      V           V
+Page 1           Page 2           Page 3
+(Data Gen &amp; RA)  (Scenario Sim)   (Impact Analysis)
+       |             |                |
+       +-+-+
+             |
+             V
+      st.session_state
+  (shared data persistence)
+</code></pre>
+  
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="2. Setting Up the Environment and Running the Application" duration="120">
+          Before diving into the code, let’s ensure you have the necessary environment set up to run this Streamlit application.  <h3>Prerequisites</h3>
+  <ul>
+<li>Python 3.7+</li>
+<li>code</li>
+</ul>
+  <h3>Installation Steps</h3>
+  <ol start="1">
+<li>p</li>
+<li>p</li>
+<li>p</li>
+<li>On Windows: </li>
+<li>On macOS/Linux: </li>
+</ol>
+  <strong>Install the required libraries</strong>:  <pre><code language="bash" class="bash">pip install streamlit pandas numpy plotly
+</code></pre>
+  <strong>Create the application files</strong>:  <ul>
+<li>p</li>
+<li>p</li>
+<li>p</li>
+<li>p</li>
+<li>p</li>
+</ul>
+   <h3>Running the Application</h3>
+  Once all files are in place, run the application from your terminal (in the <code>risk_governance_lab</code> directory with your virtual environment activated):  <pre><code language="bash" class="bash">streamlit run app.py
+</code></pre>
+  This command will open the Streamlit application in your default web browser.  
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="3. Page 1: Data Generation &amp; Risk Appetite (application_pages/page1.py)" duration="420">
+          This page serves as the foundation of the simulation, allowing users to define the universe of risk scenarios and the organizational boundaries for risk tolerance.  <h3>3.1 Generating Synthetic Risk Data</h3>
+  The first section allows users to generate a synthetic dataset of risk scenarios. This is crucial because real-world risk data is often sensitive or scarce. Synthetic data provides a controlled environment for testing and validating risk models and policies without exposing actual sensitive information.  The <code>generate_synthetic_data</code> function is at the core of this functionality:  <pre><code language="python" class="python">import numpy as np
+import pandas as pd
+
+def generate_synthetic_data(num_scenarios, seed=None):
+    &#34;&#34;&#34;Generates a DataFrame with synthetic risk scenario data.&#34;&#34;&#34;
+    if seed is not None:
+        np.random.seed(seed)
+
+    risk_categories = [&#39;Strategic&#39;, &#39;Financial&#39;, &#39;Operational&#39;, &#39;Compliance&#39;, &#39;Reputational&#39;]
+
+    data = {
+        &#39;Scenario ID&#39;: range(1, num_scenarios + 1),
+        &#39;Risk Category&#39;: np.random.choice(risk_categories, num_scenarios),
+        &#39;Initial Likelihood&#39;: np.random.rand(num_scenarios),
+        &#39;Initial Impact (Financial)&#39;: np.random.rand(num_scenarios) * 100000,
+        &#39;Initial Impact (Reputational)&#39;: np.random.rand(num_scenarios) * 10,
+        &#39;Initial Impact (Operational)&#39;: np.random.rand(num_scenarios) * 100
+    }
+
+    df = pd.DataFrame(data)
+    return df
+</code></pre>
+  <strong>Key Concepts:</strong>  <ul>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+<li>Financial impact: $ \mathrm{Uniform}(0, 100000) $</li>
+<li>Reputational impact: $ \mathrm{Uniform}(0, 10) $</li>
+<li>Operational impact: $ \mathrm{Uniform}(0, 100) $ Likelihood is also uniformly distributed between 0 and 1.</li>
+</ul>
+ <code>st.session_state[&#39;synthetic_data&#39;]</code>: The generated DataFrame is stored in Streamlit’s session state, making it accessible on subsequent pages (Scenario Simulation, Impact Analysis).   <h3>3.2 Defining Risk Appetite</h3>
+  This section allows the firm to define its tolerance levels for various types of risk. Risk appetite is a strategic declaration from the board, guiding management in everyday decision-making regarding risk-taking.  The <code>set_risk_appetite_st</code> function captures these thresholds:  <pre><code language="python" class="python">def set_risk_appetite_st(max_financial_loss, max_incidents, max_reputational_impact):
+    &#34;&#34;&#34;Stores the risk appetite thresholds in a dictionary.&#34;&#34;&#34;
+    return {
+        &#39;Max Acceptable Financial Loss per Incident&#39;: float(max_financial_loss),
+        &#39;Max Acceptable Incidents per Period&#39;: int(max_incidents),
+        &#39;Max Acceptable Reputational Impact Score&#39;: float(max_reputational_impact)
+    }
+</code></pre>
+  <strong>Key Concepts:</strong>  <ul>
+<li>strong</li>
+<li>code</li>
+<li>code</li>
+<li>code</li>
+</ul>
+ <strong>Dynamic Updates:</strong> Unlike the data generation which requires a button click, risk appetite thresholds update immediately as the user changes the <code>st.number_input</code> values. This is achieved by directly assigning the return value of <code>set_risk_appetite_st</code> to <code>st.session_state[&#39;risk_appetite_thresholds&#39;]</code> on every rerun.    Important Note on Session State Initialization: Notice that all `st.session_state` variables (`synthetic_data`, `risk_appetite_thresholds`, `simulation_log`) are initialized at the top of each page&#39;s file (`page1.py`, `page2.py`, `page3.py`). This is a crucial defensive programming practice in Streamlit. If a user navigates directly to a page or refreshes it, these variables might not have been set by a previous page. Initializing them ensures the app doesn&#39;t crash due to missing keys in `st.session_state`.   
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="4. Page 2: Scenario Simulation (application_pages/page2.py)" duration="600">
+          This page is where the core risk management actions are simulated, demonstrating their impact on initial risk levels and evaluating compliance against the defined risk appetite.  <h3>4.1 Simulating Scenario Outcomes</h3>
+  The <code>simulate_scenario_outcome</code> function is the heart of the simulation logic. It takes a specific risk scenario, a chosen risk management action, and its parameters, then calculates the residual likelihood and impacts.  <pre><code language="python" class="python">import streamlit as st
+import pandas as pd
+import numpy as np
+
+# ... (session state initialization as seen in the page2.py code) ...
+
+def simulate_scenario_outcome(scenario_data, action, action_params, risk_appetite_thresholds):
+    &#34;&#34;&#34;
+    Simulates the outcome of a risk management scenario.
+    Returns a dictionary of results including compliance.
+    &#34;&#34;&#34;
+    initial_likelihood = scenario_data[&#39;Initial Likelihood&#39;]
+    initial_financial_impact = scenario_data[&#39;Initial Impact (Financial)&#39;]
+    initial_reputational_impact = scenario_data[&#39;Initial Impact (Reputational)&#39;]
+    initial_operational_impact = scenario_data[&#39;Initial Impact (Operational)&#39;]
+
+    residual_likelihood = initial_likelihood
+    residual_financial_impact = initial_financial_impact
+    residual_reputational_impact = initial_reputational_impact
+    residual_operational_impact = initial_operational_impact
+
+    if action == &#39;Accept&#39;:
+        pass  # No changes to impact or likelihood
+
+    elif action == &#39;Mitigate&#39;:
+        mitigation_impact_reduction = action_params.get(&#39;Mitigation Factor (Impact Reduction %)&#39;, 0.0)
+        mitigation_likelihood_reduction = action_params.get(&#39;Mitigation Factor (Likelihood Reduction %)&#39;, 0.0)
+
+        residual_likelihood = initial_likelihood * (1 - mitigation_likelihood_reduction)
+        residual_financial_impact = initial_financial_impact * (1 - mitigation_impact_reduction)
+        residual_reputational_impact = initial_reputational_impact * (1 - mitigation_impact_reduction)
+        residual_operational_impact = initial_operational_impact * (1 - mitigation_impact_reduction)
+
+    elif action == &#39;Transfer&#39;:
+        insurance_deductible = action_params.get(&#39;Insurance Deductible ($)&#39;, 0.0)
+        insurance_coverage_ratio = action_params.get(&#39;Insurance Coverage Ratio (%)&#39;, 0.0)
+
+        covered_amount = initial_financial_impact * insurance_coverage_ratio
+        residual_financial_impact = max(0.0, initial_financial_impact - covered_amount - insurance_deductible) # Deductible applied after coverage
+
+    elif action == &#39;Eliminate&#39;:
+        residual_likelihood = 0.0
+        residual_financial_impact = 0.0
+        residual_reputational_impact = 0.0
+        residual_operational_impact = 0.0
+
+    else:
+        raise ValueError(&#34;Invalid action specified.&#34;)
+
+    # Compliance Check (Note: Operational compliance is checked against initial operational impact per notebook context)
+    financial_compliance = residual_financial_impact &lt;= risk_appetite_thresholds[&#39;Max Acceptable Financial Loss per Incident&#39;]
+    operational_compliance = initial_operational_impact &lt;= risk_appetite_thresholds[&#39;Max Acceptable Incidents per Period&#39;] # Checked against Initial Impact
+    reputational_compliance = residual_reputational_impact &lt;= risk_appetite_thresholds[&#39;Max Acceptable Reputational Impact Score&#39;]
+
+    result = {
+        &#39;Scenario ID&#39;: scenario_data[&#39;Scenario ID&#39;],
+        &#39;Risk Category&#39;: scenario_data[&#39;Risk Category&#39;],
+        &#39;Chosen Action&#39;: action,
+        &#39;Initial Likelihood&#39;: initial_likelihood,
+        &#39;Initial Financial Impact&#39;: initial_financial_impact,
+        &#39;Initial Reputational Impact&#39;: initial_reputational_impact,
+        &#39;Initial Operational Impact&#39;: initial_operational_impact,
+        &#39;Residual Likelihood&#39;: residual_likelihood,
+        &#39;Residual Financial Impact&#39;: residual_financial_impact,
+        &#39;Residual Reputational Impact&#39;: residual_reputational_impact,
+        &#39;Residual Operational Impact&#39;: residual_operational_impact,
+        &#39;Financial Compliance&#39;: financial_compliance,
+        &#39;Operational Compliance&#39;: operational_compliance,
+        &#39;Reputational Compliance&#39;: reputational_compliance
+    }
+    return result
+</code></pre>
+  <strong>Formulas and Logic for Actions:</strong>  <ul>
+<li>strong</li>
+<li>No changes to likelihood or impact.</li>
+</ul>
+ <strong>Mitigate</strong>: Actions taken to reduce the likelihood and/or impact of a risk event.  <ul>
+<li>Residual Likelihood = Initial Likelihood $ \times $ (1 - Mitigation Factor (Likelihood Reduction %))</li>
+<li>Residual Impact = Initial Impact $ \times $ (1 - Mitigation Factor (Impact Reduction %))</li>
+<li>The user controls the </li>
+</ul>
+ <strong>Transfer</strong>: Shifting the financial burden of a risk to a third party, typically through insurance.  <ul>
+<li>Covered Amount = Initial Financial Impact $ \times $ Insurance Coverage Ratio (%)</li>
+<li>Residual Financial Impact = max(0, Initial Financial Impact - Covered Amount - Insurance Deductible)</li>
+<li>The deductible is applied </li>
+</ul>
+ <strong>Eliminate</strong>: Taking steps to remove the risk entirely.  <ul>
+<li>Residual Likelihood = 0</li>
+<li>Residual Impact = 0 (for all types: financial, reputational, operational)</li>
+</ul>
+   <strong>Compliance Checks:</strong> After calculating the residual impacts, the function checks if these residual values are within the firm’s defined risk appetite thresholds.  <ul>
+<li>code</li>
+<li>code</li>
+<li>code</li>
+</ul>
+  <h3>4.2 Logging Simulation Outcomes</h3>
+  To support audit, analysis, and continuous improvement, all simulation outcomes are logged historically. The <code>update_simulation_log_st</code> function handles adding new or updating existing scenario outcomes to a <code>pandas.DataFrame</code> stored in <code>st.session_state[&#39;simulation_log&#39;]</code>.  <pre><code language="python" class="python">def update_simulation_log_st(simulation_log_df, scenario_outcome):
+    &#34;&#34;&#34;
+    Appends scenario outcome to a historical pandas.DataFrame log.
+    Returns the updated DataFrame.
+    &#34;&#34;&#34;
+    # ... (error handling and column alignment logic) ...
+    new_row_df = pd.DataFrame([scenario_outcome])
+    # ... (ensure consistent columns and order) ...
+    return pd.concat([simulation_log_df, new_row_df], ignore_index=True)
+</code></pre>
+  <strong>Key Concepts:</strong>  <ul>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+</ul>
+  <h3>Workflow on Page 2:</h3>
+  <ol start="1">
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+</ol>
+  
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="5. Page 3: Impact Analysis (application_pages/page3.py)" duration="480">
+          This page provides the analytical insights into the simulated risk scenarios, helping users understand the cumulative effects of their decisions and identify broader trends or problematic areas.  <h3>5.1 Calculating Cumulative Impact Over Time</h3>
+  One of the most important analyses in risk management is understanding the total impact over a series of events. This section calculates and visualizes the cumulative financial loss and the count of compliant operational incidents.  The <code>calculate_cumulative_impact</code> function performs these calculations:  <pre><code language="python" class="python">import streamlit as st
+import pandas as pd
+import plotly.express as px
+
+# ... (session state initialization as seen in the page3.py code) ...
+
+def calculate_cumulative_impact(simulation_log):
+    &#34;&#34;&#34;
+    Processes the `simulation_log` to calculate cumulative financial impact and
+    cumulative operational compliant incidents.
+    Returns the modified simulation_log DataFrame.
+    &#34;&#34;&#34;
+    if simulation_log.empty:
+        return simulation_log.copy()
+
+    df_processed = simulation_log.copy()
+
+    # Convert &#39;Residual Financial Impact&#39; to numeric, coercing errors
+    if &#39;Residual Financial Impact&#39; in df_processed.columns:
+        df_processed[&#39;Residual Financial Impact&#39;] = pd.to_numeric(df_processed[&#39;Residual Financial Impact&#39;], errors=&#39;coerce&#39;)
+        df_processed[&#39;Cumulative Financial Impact&#39;] = df_processed[&#39;Residual Financial Impact&#39;].cumsum()
+    else:
+        df_processed[&#39;Cumulative Financial Impact&#39;] = 0
+
+    # Calculate Cumulative Compliant Incidents
+    if &#39;Operational Compliance&#39; in df_processed.columns:
+        df_processed[&#39;Cumulative Compliant Incidents&#39;] = df_processed[&#39;Operational Compliance&#39;].astype(int).cumsum()
+    else:
+        df_processed[&#39;Cumulative Compliant Incidents&#39;] = 0
+
+    return df_processed
+</code></pre>
+  <strong>Formulas and Concepts:</strong>  <ul>
+<li>strong</li>
+<li>$ CumulativeFinancialImpact</li>
+<li>This metric helps identify if the aggregated losses are staying within an acceptable cumulative budget or trending upwards unsustainably.</li>
+</ul>
+ <strong>Cumulative Compliant Incidents:</strong> This tracks how many scenarios resulted in <code>Operational Compliance</code> (where the initial operational impact was within the set appetite). While it might seem counter-intuitive to track <em>compliant</em> incidents cumulatively, it provides insight into the frequency of “acceptable” events. <code>df.cumsum()</code><strong>:</strong> A <code>pandas</code> DataFrame method that calculates the cumulative sum of a series. <strong>Plotly Express:</strong> Used to generate interactive line charts for visualizing these trends over time (represented by scenario number).   <h3>5.2 Aggregating Results to Identify High-Risk Areas</h3>
+  Beyond cumulative impacts, it’s crucial to identify which risk categories or chosen actions lead to the highest overall residual impacts. This aggregation helps pinpoint areas requiring more robust policies or different strategies.  The <code>aggregate_results</code> function performs this grouping and summation:  <pre><code language="python" class="python">def aggregate_results(simulation_log):
+    &#34;&#34;&#34;
+    Groups the `simulation_log` by `Risk Category` and `Chosen Action`.
+    Calculates sum of `Residual Financial Impact` for each group.
+    Returns the grouped DataFrame.
+    &#34;&#34;&#34;
+    if simulation_log.empty:
+        return pd.DataFrame()
+
+    df_agg = simulation_log.copy()
+    try:
+        df_agg[&#39;Residual Financial Impact&#39;] = pd.to_numeric(df_agg[&#39;Residual Financial Impact&#39;], errors=&#39;coerce&#39;)
+        df_agg.dropna(subset=[&#39;Residual Financial Impact&#39;], inplace=True) # Drop rows where conversion failed
+
+        if df_agg.empty:
+            return pd.DataFrame()
+
+        # Group by &#39;Risk Category&#39; and &#39;Chosen Action&#39; and sum &#39;Residual Financial Impact&#39;
+        grouped = df_agg.groupby([&#39;Risk Category&#39;, &#39;Chosen Action&#39;])[&#39;Residual Financial Impact&#39;].sum().reset_index()
+        return grouped
+    except KeyError as e:
+        st.error(f&#34;Missing expected column for aggregation: {e}&#34;)
+        return pd.DataFrame()
+    except Exception as e:
+        st.error(f&#34;An error occurred during aggregation: {e}&#34;)
+        return pd.DataFrame()
+</code></pre>
+  <strong>Key Concepts:</strong>  <ul>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+<li>strong</li>
+</ul>
+   Governance Implication: Visualizing aggregated results helps answer critical governance questions such as: <ul>
+<li>Which risk categories consistently incur the highest residual costs, even after applying actions?</li>
+<li>Are certain risk management actions less effective than others for particular risk types?</li>
+<li>Does the overall risk profile remain within the strategic risk appetite when viewed cumulatively and by category?</li>
+</ul>
+ These insights inform strategic adjustments to risk policies, resource allocation, and even organizational structure.  
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-49880327-14', 'auto');
+
+    (function() {
+      var gaCodelab = '';
+      if (gaCodelab) {
+        ga('create', gaCodelab, 'auto', {name: 'codelab'});
+      }
+
+      var gaView;
+      var parts = location.search.substring(1).split('&');
+      for (var i = 0; i < parts.length; i++) {
+        var param = parts[i].split('=');
+        if (param[0] === 'viewga') {
+          gaView = param[1];
+          break;
+        }
+      }
+      if (gaView && gaView !== gaCodelab) {
+        ga('create', gaView, 'auto', {name: 'view'});
+      }
+    })();
+  </script>
+
+</body>
+</html>
