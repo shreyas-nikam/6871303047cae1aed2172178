@@ -204,7 +204,8 @@ def run_page2():
     if 'last_simulated_outcome' in st.session_state and st.session_state['last_simulated_outcome']:
         # Check if the scenario ID already exists in the log to prevent duplicates if user clicks multiple times
         current_scenario_id = st.session_state['last_simulated_outcome']['Scenario ID']
-        if current_scenario_id not in st.session_state['simulation_log']['Scenario ID'].values:
+        simulation_log = st.session_state['simulation_log']
+        if simulation_log.empty or current_scenario_id not in simulation_log.get('Scenario ID', pd.Series()).values:
             st.session_state['simulation_log'] = update_simulation_log_st(
                 st.session_state['simulation_log'], st.session_state.pop('last_simulated_outcome')
             )

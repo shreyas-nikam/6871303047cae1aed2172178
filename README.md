@@ -2,7 +2,7 @@ Here's a comprehensive `README.md` file for your Streamlit application lab proje
 
 ---
 
-# Risk Governance Lab 1
+# QuLab: Risk Apetite & Governance Simulator
 
 ![QuantUniversity Logo](https://www.quantuniversity.com/assets/img/logo5.jpg)
 

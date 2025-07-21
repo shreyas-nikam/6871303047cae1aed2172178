@@ -87,33 +87,36 @@ def run_page3():
     *   Cumulative Financial Impact: $ CumulativeFinancialImpact_t = \sum_{i=1}^{t} ResidualFinancialImpact_i $
     """)
 
-    processed_log = calculate_cumulative_impact(st.session_state['simulation_log'])
+    if not st.session_state['simulation_log'].empty:
+        processed_log = calculate_cumulative_impact(st.session_state['simulation_log'])
 
-    if not processed_log.empty and 'Cumulative Financial Impact' in processed_log.columns and 'Cumulative Compliant Incidents' in processed_log.columns:
-        # Ensure Scenario ID is treated as a continuous variable for plotting trends
-        processed_log['Scenario Number'] = processed_log.index + 1
+        if not processed_log.empty and 'Cumulative Financial Impact' in processed_log.columns and 'Cumulative Compliant Incidents' in processed_log.columns:
+            # Ensure Scenario ID is treated as a continuous variable for plotting trends
+            processed_log['Scenario Number'] = processed_log.index + 1
 
-        # Plot Cumulative Financial Impact
-        fig_finance = px.line(
-            processed_log,
-            x='Scenario Number',
-            y='Cumulative Financial Impact',
-            title='Cumulative Financial Impact Over Simulated Scenarios',
-            labels={'Scenario Number': 'Scenario Number', 'Cumulative Financial Impact': 'Cumulative Financial Loss ($)'}
-        )
-        st.plotly_chart(fig_finance, use_container_width=True)
+            # Plot Cumulative Financial Impact
+            fig_finance = px.line(
+                processed_log,
+                x='Scenario Number',
+                y='Cumulative Financial Impact',
+                title='Cumulative Financial Impact Over Simulated Scenarios',
+                labels={'Scenario Number': 'Scenario Number', 'Cumulative Financial Impact': 'Cumulative Financial Loss ($)'}
+            )
+            st.plotly_chart(fig_finance, use_container_width=True)
 
-        # Plot Cumulative Compliant Incidents
-        fig_incidents = px.line(
-            processed_log,
-            x='Scenario Number',
-            y='Cumulative Compliant Incidents',
-            title='Cumulative Compliant Operational Incidents Over Simulated Scenarios',
-            labels={'Scenario Number': 'Scenario Number', 'Cumulative Compliant Incidents': 'Number of Compliant Incidents'}
-        )
-        st.plotly_chart(fig_incidents, use_container_width=True)
+            # Plot Cumulative Compliant Incidents
+            fig_incidents = px.line(
+                processed_log,
+                x='Scenario Number',
+                y='Cumulative Compliant Incidents',
+                title='Cumulative Compliant Operational Incidents Over Simulated Scenarios',
+                labels={'Scenario Number': 'Scenario Number', 'Cumulative Compliant Incidents': 'Number of Compliant Incidents'}
+            )
+            st.plotly_chart(fig_incidents, use_container_width=True)
+        else:
+            st.info("Run simulations to visualize cumulative impacts.")
     else:
-        st.info("Run simulations to visualize cumulative impacts.")
+        st.info("No simulation data available. Please run simulations first.")
 
     st.divider()
 

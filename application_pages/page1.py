@@ -48,7 +48,7 @@ def set_risk_appetite_st(max_financial_loss, max_incidents, max_reputational_imp
 
 def run_page1():
     st.header("Step 1: Generate Synthetic Risk Data")
-    st.markdown("""
+    st.markdown(r"""
     Simulating diverse risk events is crucial for testing and optimizing governance policies.
     Generating synthetic data across categories (Strategic, Financial, Operational, Compliance, Reputational)
     creates a safe testbed to evaluate risk responses and appetite settings.
@@ -86,7 +86,7 @@ def run_page1():
     st.divider()
 
     st.header("Step 2: Define Risk Appetite")
-    st.markdown("""
+    st.markdown(r"""
     Defining numerical risk appetite thresholds is a key activity for the board and senior management.
     These thresholds ensure management actions and decisions are anchored to the organization's capacity,
     supporting transparency and accountability.

@@ -1,9 +1,28 @@
 import streamlit as st
+import pandas as pd
 
-st.set_page_config(page_title="Risk Governance Lab", layout="wide")
+# Initialize all session state variables at the top of your main app
+if 'synthetic_data' not in st.session_state:
+    st.session_state['synthetic_data'] = pd.DataFrame()
+
+if 'simulation_log' not in st.session_state:
+    # Initialize with expected columns to avoid KeyError
+    st.session_state['simulation_log'] = pd.DataFrame(columns=[
+        'Scenario ID', 'Timestamp', 'Action', 'Impact', 'Risk_Level', 
+        # Add other expected columns based on your application
+    ])
+
+# Add other potential session state variables
+if 'risk_appetite_thresholds' not in st.session_state:
+    st.session_state['risk_appetite_thresholds'] = {}
+
+if 'simulation_results' not in st.session_state:
+    st.session_state['simulation_results'] = pd.DataFrame()
+
+st.set_page_config(page_title="QuLab: Risk Apetite & Governance Simulator", layout="wide")
 st.sidebar.image("https://www.quantuniversity.com/assets/img/logo5.jpg")
 st.sidebar.divider()
-st.title("Risk Governance Lab 1")
+st.title("QuLab: Risk Apetite & Governance Simulator")
 st.divider()
 
 st.markdown("""
