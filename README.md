@@ -8,7 +8,7 @@ Here's a comprehensive `README.md` file for your Streamlit application lab proje
 
 ## Project Description
 
-The **Risk Governance Lab 1** is a interactive Streamlit application designed to simulate risk management strategies within a firm's predefined risk appetite. It serves as an educational and experimental platform, allowing users to:
+The **Risk Apetite & Governance Simulator** is a interactive Streamlit application designed to simulate risk management strategies within a firm's predefined risk appetite. It serves as an educational and experimental platform, allowing users to:
 
 *   **Generate synthetic risk scenarios:** Create diverse risk events with varying initial likelihoods and impacts (financial, reputational, operational).
 *   **Define risk appetite thresholds:** Set quantitative limits for acceptable financial loss, incident frequency, and reputational damage.
@@ -68,7 +68,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 2.  **Create a virtual environment (recommended):**
 
     ```bash
-    python -m venv venv
+    python3 -m venv venv
     # On Windows
     .\venv\Scripts\activate
     # On macOS/Linux

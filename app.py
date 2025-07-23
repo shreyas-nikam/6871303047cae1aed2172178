@@ -25,18 +25,26 @@ st.sidebar.divider()
 st.title("QuLab: Risk Apetite & Governance Simulator")
 st.divider()
 
-st.markdown("""
-This application simulates risk management strategies within a firm's risk appetite.
-It allows users to generate synthetic risk scenarios, define risk appetite thresholds,
-simulate risk management actions, and visualize the impact of these actions.
-""")
-
 page = st.sidebar.selectbox(
     label="Navigation",
     options=["Data Generation & Risk Appetite", "Scenario Simulation", "Impact Analysis"]
 )
 
 if page == "Data Generation & Risk Appetite":
+    st.markdown("""
+
+    This interactive application empowers you to explore and simulate risk management strategies tailored to your organization's risk appetite.  
+    Key features include:
+
+    - **Synthetic Risk Scenario Generation:** Create realistic risk scenarios to test your risk management framework.
+    - **Risk Appetite Definition:** Set and adjust risk appetite thresholds to align with your firm's governance policies.
+    - **Scenario Simulation:** Apply risk management actions and observe their effects on simulated scenarios.
+    - **Impact Analysis & Visualization:** Gain insights into the effectiveness of your strategies through dynamic visualizations and detailed logs.
+
+    Use the sidebar to navigate between modules. Start by generating data and defining your risk appetite, then proceed to simulate scenarios and analyze their impact.
+
+    ---
+    """)
     from application_pages.page1 import run_page1
     run_page1()
 elif page == "Scenario Simulation":

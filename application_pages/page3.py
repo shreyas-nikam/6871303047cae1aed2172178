@@ -78,7 +78,7 @@ def aggregate_results(simulation_log):
 
 def run_page3():
     st.header("Step 5: Calculating Cumulative Impact Over Time")
-    st.markdown("""
+    st.markdown(r"""
     Aggregating risk impacts over time offers decision-makers critical insights into policy performance long-term.
     Tracking cumulative financial losses and incident counts helps identify trends, reassess risk appetites,
     and adjust mitigation strategies proactively.

@@ -127,7 +127,7 @@ def update_simulation_log_st(simulation_log_df, scenario_outcome):
 
 def run_page2():
     st.header("Step 3: Simulating Scenario Outcomes Based on Risk Management Actions")
-    st.markdown("""
+    st.markdown(r"""
     This step models the impact of various risk management actions on the likelihood and impact of risk events,
     allowing users to observe the effect of their decisions. Compliance is evaluated by verifying that the
     residual impacts are within the predefined risk appetite.
