@@ -168,7 +168,7 @@ This project is licensed under the MIT License - see the `LICENSE` file for deta
 
 For questions or inquiries, please contact:
 
-*   **QuantUniversity** (info@quantuniversity.com)
+*   **QuantUniversity** (info@qusandbox.com)
 *   Project Maintainer: [Your Name/GitHub Profile Link] (Optional)
 
 ---
