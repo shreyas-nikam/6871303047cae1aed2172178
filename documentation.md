@@ -1,5 +1,5 @@
 id: 6871303047cae1aed2172178_documentation
-summary: QuLab: Risk Apetite & Governance Simulator Documentation
+summary: QuLab: Risk Appetite & Governance Simulator Documentation
 feedback link: https://docs.google.com/forms/d/e/1FAIpQLSfWkOK-in_bMMoHSZfcIvAeO58PAH9wrDqcxnJABHaxiDqhSA/viewform?usp=sf_link
 environments: Web
 status: Published
@@ -110,7 +110,7 @@ Before diving into the code, let's ensure you have the necessary environment set
         st.set_page_config(page_title="Risk Governance Lab", layout="wide")
         st.sidebar.image("https://www.quantuniversity.com/assets/img/logo5.jpg")
         st.sidebar.divider()
-        st.title("QuLab: Risk Apetite & Governance Simulator")
+        st.title("QuLab: Risk Appetite & Governance Simulator")
         st.divider()
 
         st.markdown("""

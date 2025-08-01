@@ -1,10 +1,10 @@
-# QuLab: Risk Apetite & Governance Simulator
+# QuLab: Risk Appetite & Governance Simulator
 
 ![QuantUniversity Logo](https://www.quantuniversity.com/assets/img/logo5.jpg)
 
 ## Project Description
 
-The **Risk Apetite & Governance Simulator** is a interactive Streamlit application designed to simulate risk management strategies within a firm's predefined risk appetite. It serves as an educational and experimental platform, allowing users to:
+The **Risk Appetite & Governance Simulator** is a interactive Streamlit application designed to simulate risk management strategies within a firm's predefined risk appetite. It serves as an educational and experimental platform, allowing users to:
 
 *   **Generate synthetic risk scenarios:** Create diverse risk events with varying initial likelihoods and impacts (financial, reputational, operational).
 *   **Define risk appetite thresholds:** Set quantitative limits for acceptable financial loss, incident frequency, and reputational damage.

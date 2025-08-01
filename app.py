@@ -19,10 +19,10 @@ if 'risk_appetite_thresholds' not in st.session_state:
 if 'simulation_results' not in st.session_state:
     st.session_state['simulation_results'] = pd.DataFrame()
 
-st.set_page_config(page_title="QuLab: Risk Apetite & Governance Simulator", layout="wide")
+st.set_page_config(page_title="QuLab: Risk Appetite & Governance Simulator", layout="wide")
 st.sidebar.image("https://www.quantuniversity.com/assets/img/logo5.jpg")
 st.sidebar.divider()
-st.title("QuLab: Risk Apetite & Governance Simulator")
+st.title("QuLab: Risk Appetite & Governance Simulator")
 st.divider()
 
 page = st.sidebar.selectbox(
